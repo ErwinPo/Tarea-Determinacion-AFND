@@ -38,26 +38,4 @@ defmodule Automatatarea do
     |> Enum.uniq
     |> Enum.sort
   end
-
-  def e_determinize(n, act, {estados, trans}) do
-    estados = [act | estados]
-    Enum.reduce((n.sigma), {estados, trans}, fn a, {estados, trans} ->
-      s = eclosure(n,
-      eclosure(n, act)
-      |> Enum.map(fn q -> n.delta[{q, a}] end)
-      |> Enum.filter(&(&1!=nil))
-      |> List.flatten())
-      if s != [] do
-        trans = Map.put(trans, {act, a}, s)
-        if s not in estados do
-          e_determinize(n, s, {estados, trans})
-        else
-          {estados, trans}
-        end
-      else
-        {estados, trans}
-      end
-    end)
-  end
-
 end
