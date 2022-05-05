@@ -11,7 +11,7 @@ defmodule Automatatarea do
   def determinize(auto) do
     finalstates = power(auto.states)
     sigma = auto.sigma
-    delta = Enum.map(Automatas.nfa1.sigma, fn s -> Enum.map(finalstates, fn a -> {{a, s}, Enum.map(a, fn m -> auto.delta[{m, s}] end)
+    delta = Enum.map(auto.sigma, fn s -> Enum.map(finalstates, fn a -> {{a, s}, Enum.map(a, fn m -> auto.delta[{m, s}] end)
     |> List.flatten
     |> Enum.uniq
     |> Enum.filter(fn b -> b != nil end)} end) end)
@@ -30,7 +30,7 @@ defmodule Automatatarea do
   end
 
   def eclosure(delta, r, v) do
-    Enum.reduce(Map.get(delta, {r, nil}, []), v, fn q, vp->
+    Enum.reduce(Map.get(delta, {r, ?e}, []), v, fn q, vp->
       if q not in vp, do: eclosure(delta, q, [q | vp]), else: vp end)
   end
   def eclosure(auto, x) do
@@ -38,4 +38,26 @@ defmodule Automatatarea do
     |> Enum.uniq
     |> Enum.sort
   end
+
+  def e_determinize(n, act, {estados, trans}) do
+    estados = [act | estados]
+    Enum.reduce((n.sigma), {estados, trans}, fn a, {estados, trans} ->
+      s = eclosure(n,
+      eclosure(n, act)
+      |> Enum.map(fn q -> n.delta[{q, a}] end)
+      |> Enum.filter(&(&1!=nil))
+      |> List.flatten())
+      if s != [] do
+        trans = Map.put(trans, {act, a}, s)
+        if s not in estados do
+          e_determinize(n, s, {estados, trans})
+        else
+          {estados, trans}
+        end
+      else
+        {estados, trans}
+      end
+    end)
+  end
+
 end
