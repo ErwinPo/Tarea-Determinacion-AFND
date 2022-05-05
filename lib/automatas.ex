@@ -1,11 +1,11 @@
 defmodule Automatas do
 
-  def dfa1 do
+  def nfa1 do
     %{
-      alpha: ~w[a b],
       states: [P0,P1,P2,P3],
-      istate: P0,
-      fstates: [P3],
+      q0: P0,
+      final: [P3],
+      sigma: [?a, ?b],
       delta: %{
         {P0, "a"} => [P0, P1],
         {P0, "b"} => [P0],
@@ -19,7 +19,7 @@ defmodule Automatas do
     }
   end
 
-  def nfa1 do
+  def as do
     %{
       q0: 0,
       f: [3],
