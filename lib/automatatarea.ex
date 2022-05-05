@@ -1,15 +1,15 @@
 defmodule Automatatarea do
 
-  def powerset([head | tail]) do
-    pt = powerset(tail)
-    powerset(head, pt, pt)
+  def power([head | tail]) do
+    pt = power(tail)
+    power(head, pt, pt)
   end
-  def powerset([]), do: [[]]
-  defp powerset(x, [head | tail], accumulator), do: powerset(x, tail, [[x | head] | accumulator])
-  defp powerset(_, [], accumulator), do: accumulator
+  def power([]), do: [[]]
+  defp power(x, [head | tail], accumulator), do: power(x, tail, [[x | head] | accumulator])
+  defp power(_, [], accumulator), do: accumulator
 
   def determinize(auto) do
-    finalstates = powerset(auto.states)
+    finalstates = power(auto.states)
     sigma = auto.sigma
     delta = Enum.map(Automatas.nfa1.sigma, fn s -> Enum.map(finalstates, fn a -> {{a, s}, Enum.map(a, fn m -> auto.delta[{m, s}] end)
     |> List.flatten
@@ -27,5 +27,15 @@ defmodule Automatatarea do
       q0: qcero,
       final: final
     }
+  end
+
+  def eclosure(delta, r, v) do
+    Enum.reduce(Map.get(delta, {r, nil}, []), v, fn q, vp->
+      if q not in vp, do: eclosure(delta, q, [q | vp]), else: vp end)
+  end
+  def eclosure(auto, x) do
+    Enum.reduce(x, [], fn fun, v -> eclosure(auto.delta, fun, [fun|v])end)
+    |> Enum.uniq
+    |> Enum.sort
   end
 end

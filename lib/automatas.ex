@@ -15,15 +15,16 @@ defmodule Automatas do
     }
   end
 
-  def as do
+  def nfa2 do
     %{
-      q0: 0,
-      f: [3],
+      states: [P0, P1, P2, P3, P4],
+      sigma: [?a, ?b],
       delta: %{
-        {0, ?a} => [1, 0],
-        {0, ?b} => [0],
-        {1, ?b} => [2],
-        {2, ?b} => [3]
+        {P0, nil} => [P1],
+        {P0, ?b} => [P2],
+        {P1, nil} => [P3],
+        {P2, nil} => [P4],
+        {P3, ?a} => [P4]
       }
     }
   end
