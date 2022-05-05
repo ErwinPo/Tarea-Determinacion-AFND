@@ -38,4 +38,5 @@ defmodule Automatatarea do
     |> Enum.uniq
     |> Enum.sort
   end
+
 end

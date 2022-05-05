@@ -32,4 +32,5 @@ defmodule Automatas do
   end
 
 
+
 end
