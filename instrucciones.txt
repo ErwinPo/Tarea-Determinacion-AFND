@@ -1,0 +1,11 @@
+Función 1: determinize()
+iex> Automatatarea.determinize(Automatas.nfa1)
+
+Función 2: eclosure()
+iex> Automatatarea.eclosure(Automatas.nfa2,[P0])
+iex> Automatatarea.eclosure(Automatas.nfa2,[P1])
+iex> Automatatarea.eclosure(Automatas.nfa2,[P2])
+
+Función 3: e_determinize()
+iex> Automatatarea.e_determinize(Automatas.nfa3,Automatas.nfa3.q0,{[], %{}})
+

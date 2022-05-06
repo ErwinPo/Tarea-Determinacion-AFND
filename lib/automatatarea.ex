@@ -30,7 +30,7 @@ defmodule Automatatarea do
   end
 
   def eclosure(delta, r, v) do
-    Enum.reduce(Map.get(delta, {r, ?e}, []), v, fn q, vp->
+    Enum.reduce(Map.get(delta, {r, nil}, []), v, fn q, vp->
       if q not in vp, do: eclosure(delta, q, [q | vp]), else: vp end)
   end
   def eclosure(auto, x) do
@@ -38,5 +38,27 @@ defmodule Automatatarea do
     |> Enum.uniq
     |> Enum.sort
   end
+
+  def e_determinize(auto, inicial, {states, t}) do
+    states = [inicial | states]
+
+    Enum.reduce((auto.sigma), {states, t}, fn a, {states, t} -> s = eclosure(auto, eclosure(auto, inicial)
+      |> Enum.map(fn fun -> auto.delta[{fun, a}] end)
+      |> Enum.filter(&(&1 != nil))
+      |> List.flatten)
+
+      if s == [] do
+        {states, t}
+      else
+        t = Map.put(t, {inicial, a}, s)
+        if s in states do
+          {states, t}
+        else
+          e_determinize(auto, s, {states, t})
+        end
+      end
+    end)
+  end
+
 
 end
