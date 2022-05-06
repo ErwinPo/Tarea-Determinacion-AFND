@@ -39,4 +39,26 @@ defmodule Automatatarea do
     |> Enum.sort
   end
 
+  def e_determinize(auto, inicial, {states, t}) do
+    states = [inicial | states]
+
+    Enum.reduce((auto.sigma), {states, t}, fn a, {states, t} -> s = eclosure(auto, eclosure(auto, inicial)
+      |> Enum.map(fn fun -> auto.delta[{fun, a}] end)
+      |> Enum.filter(&(&1 != nil))
+      |> List.flatten)
+
+      if s == [] do
+        {states, t}
+      else
+        t = Map.put(t, {inicial, a}, s)
+        if s in states do
+          {states, t}
+        else
+          e_determinize(auto, s, {states, t})
+        end
+      end
+    end)
+  end
+
+
 end
